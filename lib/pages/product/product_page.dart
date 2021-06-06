@@ -1,17 +1,20 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_list/auth/auth_services.dart';
 import 'package:shopping_list/auth/sign_in.dart';
-import 'package:shopping_list/pages/category.dart';
+import 'package:shopping_list/pages/category/category_page.dart';
 import 'package:shopping_list/pages/login.dart';
+import 'package:shopping_list/pages/product/add_product_page.dart';
+import 'package:shopping_list/widgets/product_list.dart';
 
-class ShoppingList extends StatefulWidget {
+class ProductPage extends StatefulWidget {
   @override
-  _ShoppingListState createState() => _ShoppingListState();
+  _ProductPageState createState() => _ProductPageState();
 }
 
-class _ShoppingListState extends State<ShoppingList> {
-  final FirebaseAuth auth = FirebaseAuth.instance;
+class _ProductPageState extends State<ProductPage> {
+  final FocusNode _nameFocusNode = FocusNode();
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,21 @@ class _ShoppingListState extends State<ShoppingList> {
         backgroundColor: Colors.teal[400],
         foregroundColor: Colors.white,
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => AddProductPage(),
+            ),
+          );
+        },
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            top: 10,
+          ),
+          child: ProductList(),
+        ),
       ),
     );
   }
@@ -55,7 +72,7 @@ class _ShoppingListState extends State<ShoppingList> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ShoppingList()),
+                MaterialPageRoute(builder: (context) => ProductPage()),
               );
             },
           ),
@@ -65,7 +82,7 @@ class _ShoppingListState extends State<ShoppingList> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Category()),
+                MaterialPageRoute(builder: (context) => CategoryPage()),
               );
             },
           ),
@@ -77,7 +94,7 @@ class _ShoppingListState extends State<ShoppingList> {
               AuthService.signOutGoogle();
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) {
-                return login();
+                return Login();
               }), ModalRoute.withName('/'));
             },
           ),

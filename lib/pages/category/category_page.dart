@@ -1,18 +1,20 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:shopping_list/auth/auth_services.dart';
 import 'package:shopping_list/auth/sign_in.dart';
+import 'package:shopping_list/pages/category/add_category_page.dart';
 import 'package:shopping_list/pages/login.dart';
-import 'package:shopping_list/pages/shopping_list.dart';
+import 'package:shopping_list/pages/product/product_page.dart';
+import 'package:shopping_list/widgets/category_list.dart';
 
-class Category extends StatefulWidget {
+class CategoryPage extends StatefulWidget {
   @override
-  _CategoryState createState() => _CategoryState();
+  _CategoryPageState createState() => _CategoryPageState();
 }
 
-class _CategoryState extends State<Category> {
-  final FirebaseAuth auth = FirebaseAuth.instance;
+class _CategoryPageState extends State<CategoryPage> {
+  final FocusNode _nameFocusNode = FocusNode();
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +28,25 @@ class _CategoryState extends State<Category> {
         backgroundColor: Colors.teal[400],
         foregroundColor: Colors.white,
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => AddCategoryPage(),
+            ),
+          );
+        },
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            top: 10,
+          ),
+          child: CategoryList(),
+        ),
       ),
     );
   }
-
+ 
   Widget _drawer() {
     return Drawer(
       child: ListView(
@@ -54,7 +70,7 @@ class _CategoryState extends State<Category> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ShoppingList()),
+                MaterialPageRoute(builder: (context) => ProductPage()),
               );
             },
           ),
@@ -66,7 +82,7 @@ class _CategoryState extends State<Category> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Category()),
+                MaterialPageRoute(builder: (context) => CategoryPage()),
               );
             },
           ),
@@ -78,7 +94,7 @@ class _CategoryState extends State<Category> {
               AuthService.signOutGoogle();
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) {
-                return login();
+                return Login();
               }), ModalRoute.withName('/'));
             },
           ),

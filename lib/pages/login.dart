@@ -1,17 +1,22 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_list/auth/auth_services.dart';
 import 'package:shopping_list/auth/signInSignUpResult.dart';
 import 'package:shopping_list/auth/sign_in.dart';
-import 'package:shopping_list/pages/first_screen.dart';
-import 'package:shopping_list/pages/shopping_list.dart';
+import 'package:shopping_list/contoh_sederhana/product_page.dart';
+import 'package:shopping_list/database/category.dart';
+import 'package:shopping_list/database/product.dart';
+import 'package:shopping_list/pages/product/product_page.dart';
 import 'package:shopping_list/pages/register.dart';
 
-class login extends StatefulWidget {
+class Login extends StatefulWidget {
   @override
-  _loginState createState() => _loginState();
+  _LoginState createState() => _LoginState();
 }
 
-class _loginState extends State<login> {
+class _LoginState extends State<Login> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -20,10 +25,6 @@ class _loginState extends State<login> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // appBar: AppBar(
-      //   centerTitle: true,
-      //   title: Text("Firebase"),
-      // ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: SafeArea(
@@ -192,10 +193,13 @@ class _loginState extends State<login> {
                     emailController.text, passwordController.text)
                 .then((result) {
               if (result != null) {
+                Categories.userUid = _auth.currentUser.uid;
+                Product.userUid = _auth.currentUser.uid;
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
-                      return ShoppingList();
+                      // return Product();
+                      return ProductPage();
                     },
                   ),
                 );
@@ -249,10 +253,12 @@ class _loginState extends State<login> {
         onPressed: () async {
           signInWithGoogle().then((result) {
             if (result != null) {
+              Categories.userUid = _auth.currentUser.uid;
+              Product.userUid = _auth.currentUser.uid;
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) {
-                    return ShoppingList();
+                    return ProductPage();
                   },
                 ),
               );

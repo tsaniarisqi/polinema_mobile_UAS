@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_list/auth/auth_services.dart';
 import 'package:shopping_list/auth/signInSignUpResult.dart';
-import 'package:shopping_list/pages/first_screen.dart';
+import 'package:shopping_list/database/category.dart';
+import 'package:shopping_list/database/product.dart';
 import 'package:shopping_list/pages/login.dart';
+import 'package:shopping_list/pages/product/product_page.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -10,6 +13,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -43,10 +47,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => login()));
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Login()));
                         },
                         child: Text(
                           "Login here",
@@ -152,11 +154,13 @@ class _RegisterPageState extends State<RegisterPage> {
           SignInSignUpResult result = await AuthService.createUser(
               email: emailController.text, pass: passwordController.text);
           if (result.user != null) {
+            Categories.userUid = _auth.currentUser.uid;
+            Product.userUid = _auth.currentUser.uid;
             // Go to Profile Page
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => FirstScreen(),
+                builder: (context) => ProductPage(),
               ),
             );
           } else {
