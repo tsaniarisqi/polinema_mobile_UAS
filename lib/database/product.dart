@@ -8,6 +8,7 @@ class Product {
   static String userUid;
 
   static Future<void> addProduct({
+    String categoryName,
     String productName,
     int qty,
     String notes,
@@ -16,6 +17,7 @@ class Product {
         _mainCollection.doc(userUid).collection('product').doc();
 
     Map<String, dynamic> data = <String, dynamic>{
+      "categoryName": categoryName,
       "productName": productName,
       "qty": qty,
       "notes": notes,
@@ -28,6 +30,7 @@ class Product {
   }
 
   static Future<void> updateProduct({
+    String categoryName,
     String productName,
     int qty,
     String notes,
@@ -37,6 +40,7 @@ class Product {
         _mainCollection.doc(userUid).collection('product').doc(docId);
 
     Map<String, dynamic> data = <String, dynamic>{
+      "categoryName": categoryName,
       "productName": productName,
       "qty": qty,
       "notes": notes,

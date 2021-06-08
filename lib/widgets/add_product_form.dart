@@ -1,12 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_list/database/product.dart';
+import 'package:shopping_list/database/category.dart';
 
 class AddProductForm extends StatefulWidget {
+  final FocusNode categoryNameFocusNode;
   final FocusNode productNameFocusNode;
   final FocusNode qtyFocusNode;
   final FocusNode notesFocusNode;
 
   const AddProductForm({
+    this.categoryNameFocusNode,
     this.productNameFocusNode,
     this.qtyFocusNode,
     this.notesFocusNode,
@@ -18,6 +23,7 @@ class AddProductForm extends StatefulWidget {
 
 class _AddProductFormState extends State<AddProductForm> {
   final _addProductFormKey = GlobalKey<FormState>();
+  var selectedCategory;
 
   final TextEditingController _productNameController = TextEditingController();
   final TextEditingController _qtyController = TextEditingController();
@@ -70,6 +76,53 @@ class _AddProductFormState extends State<AddProductForm> {
               },
             ),
           ),
+          StreamBuilder<QuerySnapshot>(
+            stream: Categories.readCategories(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData)
+                const Text("Loading.....");
+              else {
+                List<DropdownMenuItem> categoryItems = [];
+                for (int i = 0; i < snapshot.data.docs.length; i++) {
+                  DocumentSnapshot snap = snapshot.data.docs[i];
+                  categoryItems.add(
+                    DropdownMenuItem(
+                      child: Text(
+                        snap.get("categoryName"),
+                      ),
+                      value: "${snap.get("categoryName")}",
+                    ),
+                  );
+                }
+                return Padding(
+                  padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                  child: DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Category',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                    focusNode: widget.categoryNameFocusNode,
+                    items: categoryItems,
+                    onChanged: (categoryValue) {
+                      setState(() {
+                        selectedCategory = categoryValue;
+                      });
+                    },
+                    value: selectedCategory,
+                  ),
+                );
+              }
+              return Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Colors.black,
+                  ),
+                ),
+              );
+            },
+          ),
           Padding(
             padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
             child: TextFormField(
@@ -104,6 +157,7 @@ class _AddProductFormState extends State<AddProductForm> {
                 ),
                 onPressed: () async {
                   await Product.addProduct(
+                      categoryName: selectedCategory,
                       productName: _productNameController.text,
                       qty: int.tryParse(_qtyController.text),
                       notes: _notesController.text);

@@ -1,19 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shopping_list/database/category.dart';
 import 'package:shopping_list/database/product.dart';
 
 class EditProductForm extends StatefulWidget {
+  final FocusNode categoryNameFocusNode;
   final FocusNode productNameFocusNode;
   final FocusNode qtyFocusNode;
   final FocusNode notesFocusNode;
+  final String currentCategoryName;
   final String currentProductName;
   final int currentQty;
   final String currentNotes;
   final String documentId;
 
   const EditProductForm({
+    this.categoryNameFocusNode,
     this.productNameFocusNode,
     this.qtyFocusNode,
     this.notesFocusNode,
+    this.currentCategoryName,
     this.currentProductName,
     this.currentQty,
     this.currentNotes,
@@ -26,13 +32,17 @@ class EditProductForm extends StatefulWidget {
 
 class _EditProductFormState extends State<EditProductForm> {
   final _editProductFormKey = GlobalKey<FormState>();
+  var selectedCategory;
 
-  TextEditingController _productNameController;
-  TextEditingController _qtyController;
-  TextEditingController _notesController;
+  TextEditingController _categoryController = TextEditingController();
+  TextEditingController _productNameController = TextEditingController();
+  TextEditingController _qtyController = TextEditingController();
+  TextEditingController _notesController = TextEditingController();
 
   @override
   void initState() {
+    _categoryController =
+        TextEditingController(text: widget.currentCategoryName);
     _productNameController = TextEditingController(
       text: widget.currentProductName,
     );
@@ -92,6 +102,53 @@ class _EditProductFormState extends State<EditProductForm> {
               },
             ),
           ),
+          StreamBuilder<QuerySnapshot>(
+            stream: Categories.readCategories(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData)
+                const Text("Loading.....");
+              else {
+                List<DropdownMenuItem> categoryItems = [];
+                for (int i = 0; i < snapshot.data.docs.length; i++) {
+                  DocumentSnapshot snap = snapshot.data.docs[i];
+                  categoryItems.add(
+                    DropdownMenuItem(
+                      child: Text(
+                        snap.get("categoryName"),
+                      ),
+                      value: "${snap.get("categoryName")}",
+                    ),
+                  );
+                }
+                return Padding(
+                  padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                  child: DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Category',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                    focusNode: widget.categoryNameFocusNode,
+                    items: categoryItems,
+                    onChanged: (categoryValue) {
+                      setState(() {
+                        selectedCategory = categoryValue;
+                      });
+                    },
+                    value: selectedCategory,
+                  ),
+                );
+              }
+              return Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Colors.black,
+                  ),
+                ),
+              );
+            },
+          ),
           Padding(
             padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
             child: TextFormField(
@@ -130,6 +187,7 @@ class _EditProductFormState extends State<EditProductForm> {
                     onPressed: () async {
                       await Product.updateProduct(
                           docId: widget.documentId,
+                          categoryName: selectedCategory,
                           productName: _productNameController.text,
                           qty: int.tryParse(_qtyController.text),
                           notes: _notesController.text);
