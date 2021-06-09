@@ -13,7 +13,7 @@ class CategoryList extends StatelessWidget {
           return Text('Something went wrong');
         } else if (snapshot.hasData || snapshot.data != null) {
           return ListView.separated(
-            separatorBuilder: (context, index) => SizedBox(height: 16.0),
+            separatorBuilder: (context, index) => SizedBox(height: 5.0),
             itemCount: snapshot.data.docs.length,
             itemBuilder: (context, index) {
               var noteInfo = snapshot.data.docs[index].data();
@@ -21,7 +21,7 @@ class CategoryList extends StatelessWidget {
               String categoryName = noteInfo['categoryName'];
 
               return Card(
-                color: Colors.white,
+                color: Colors.grey[50],
                 elevation: 2.0,
                 margin: EdgeInsets.all(8),
                 child: ListTile(
@@ -36,10 +36,40 @@ class CategoryList extends StatelessWidget {
                       ),
                     ),
                   ),
+                  leading: CircleAvatar(
+                    child: Icon(Icons.category),
+                  ),
                   title: Text(
                     categoryName,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
+                  ),
+                  trailing: GestureDetector(
+                    child: Icon(Icons.delete),
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text("Delete"),
+                          content:
+                              Text("Are you sure to delete this category? "),
+                          actions: <Widget>[
+                            FlatButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text("Cancel")),
+                            FlatButton(
+                                onPressed: () async {
+                                  await Categories.deleteCategory(docId: docID);
+                                  Navigator.pop(context);
+                                },
+                                child: Text("Yes"))
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ),
               );

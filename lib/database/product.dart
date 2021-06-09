@@ -56,7 +56,7 @@ class Product {
     CollectionReference notesItemCollection =
         _mainCollection.doc(userUid).collection('product');
 
-    return notesItemCollection.snapshots();
+    return notesItemCollection.orderBy("categoryName").snapshots();
   }
 
   static Future<void> deleteProduct({

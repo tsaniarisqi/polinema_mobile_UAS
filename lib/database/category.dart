@@ -44,7 +44,7 @@ class Categories {
     CollectionReference notesItemCollection =
         _mainCollection.doc(userUid).collection('category');
 
-    return notesItemCollection.snapshots();
+    return notesItemCollection.orderBy("categoryName").snapshots();
   }
 
   static Future<void> deleteCategory({
