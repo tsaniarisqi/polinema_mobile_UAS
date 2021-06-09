@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:shopping_list/widgets/edit_product_from.dart';
 
 class EditProductPage extends StatefulWidget {
+  final String currentCategoryName;
   final String currentProductName;
   final String currentQty;
   final String currentNotes;
   final String documentId;
 
   EditProductPage({
+    this.currentCategoryName,
     this.currentProductName,
     this.currentQty,
     this.currentNotes,
@@ -19,6 +21,7 @@ class EditProductPage extends StatefulWidget {
 }
 
 class _EditProductPageState extends State<EditProductPage> {
+  final FocusNode _categoryNameFocusNode = FocusNode();
   final FocusNode _productNameFocusNode = FocusNode();
   final FocusNode _qtyFocusNode = FocusNode();
   final FocusNode _notesFocusNode = FocusNode();
@@ -27,6 +30,7 @@ class _EditProductPageState extends State<EditProductPage> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        _categoryNameFocusNode.unfocus();
         _productNameFocusNode.unfocus();
         _qtyFocusNode.unfocus();
         _notesFocusNode.unfocus();
@@ -45,9 +49,11 @@ class _EditProductPageState extends State<EditProductPage> {
             ),
             child: EditProductForm(
               documentId: widget.documentId,
+              categoryNameFocusNode: _categoryNameFocusNode,
               productNameFocusNode: _productNameFocusNode,
               qtyFocusNode: _qtyFocusNode,
               notesFocusNode: _notesFocusNode,
+              currentCategoryName: widget.currentCategoryName,
               currentProductName: widget.currentProductName,
               currentQty: int.tryParse(widget.currentQty),
               currentNotes: widget.currentNotes,
