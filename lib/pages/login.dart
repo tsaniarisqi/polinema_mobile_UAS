@@ -1,10 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_list/auth/auth_services.dart';
 import 'package:shopping_list/auth/signInSignUpResult.dart';
-import 'package:shopping_list/auth/sign_in.dart';
-import 'package:shopping_list/contoh_sederhana/product_page.dart';
 import 'package:shopping_list/database/category.dart';
 import 'package:shopping_list/database/product.dart';
 import 'package:shopping_list/pages/product/product_page.dart';
@@ -157,54 +154,36 @@ class _LoginState extends State<Login> {
       padding: EdgeInsets.symmetric(vertical: 30),
       width: double.infinity,
       child: RaisedButton(
-        // onPressed: () async {
-        //   SignInSignUpResult result = await AuthService.signInWithEmail(
-        //       email: emailController.text, pass: passwordController.text);
-        //   if (result.user != null) {
-        //     // Go to Profile Page
-        //     Navigator.push(
-        //       context,
-        //       MaterialPageRoute(
-        //         builder: (context) => ShoppingList(),
-        //       ),
-        //     );
-        //   } else {
-        //     // Show Dialog
-        //     showDialog(
-        //       context: context,
-        //       builder: (context) => AlertDialog(
-        //         title: Text("Error"),
-        //         content: Text(result.message),
-        //         actions: <Widget>[
-        //           FlatButton(
-        //             onPressed: () {
-        //               Navigator.pop(context);
-        //             },
-        //             child: Text("OK"),
-        //           )
-        //         ],
-        //       ),
-        //     );
-        //   }
-        // },
         onPressed: () async {
-          if (_formKey.currentState.validate()) {
-            signInWithEmailAndPassword(
-                    emailController.text, passwordController.text)
-                .then((result) {
-              if (result != null) {
-                Categories.userUid = _auth.currentUser.uid;
-                Product.userUid = _auth.currentUser.uid;
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      // return Product();
-                      return ProductPage();
+          SignInSignUpResult result = await AuthService.signInWithEmail(
+              email: emailController.text, pass: passwordController.text);
+          if (result.user != null) {
+            Categories.userUid = _auth.currentUser.uid;
+            Product.userUid = _auth.currentUser.uid;
+            // Go to Profile Page
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProductPage(),
+              ),
+            );
+          } else {
+            // Show Dialog
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text("Error"),
+                content: Text(result.message),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.pop(context);
                     },
-                  ),
-                );
-              }
-            });
+                    child: Text("OK"),
+                  )
+                ],
+              ),
+            );
           }
         },
         child: Text(
@@ -251,46 +230,35 @@ class _LoginState extends State<Login> {
       child: OutlineButton(
         splashColor: Colors.grey,
         onPressed: () async {
-          signInWithGoogle().then((result) {
-            if (result != null) {
-              Categories.userUid = _auth.currentUser.uid;
-              Product.userUid = _auth.currentUser.uid;
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return ProductPage();
-                  },
-                ),
-              );
-            }
-          });
-          // SignInSignUpResult result = await AuthService.signInWithGoogle();
-          // if (result.user != null) {
-          //   // Go to Profile Page
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => ShoppingList(),
-          //     ),
-          //   );
-          // } else {
-          //   // Show Dialog
-          //   showDialog(
-          //     context: context,
-          //     builder: (context) => AlertDialog(
-          //       title: Text("Error"),
-          //       content: Text(result.message),
-          //       actions: <Widget>[
-          //         FlatButton(
-          //           onPressed: () {
-          //             Navigator.pop(context);
-          //           },
-          //           child: Text("OK"),
-          //         )
-          //       ],
-          //     ),
-          //   );
-          // }
+          SignInSignUpResult result = await AuthService.signInWithGoogle();
+          if (result.user != null) {
+            Categories.userUid = _auth.currentUser.uid;
+            Product.userUid = _auth.currentUser.uid;
+            // Go to Profile Page
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProductPage(),
+              ),
+            );
+          } else {
+            // Show Dialog
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text("Error"),
+                content: Text(result.message),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text("OK"),
+                  )
+                ],
+              ),
+            );
+          }
         },
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         highlightElevation: 0,

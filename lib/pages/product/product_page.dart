@@ -1,6 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_list/auth/auth_services.dart';
-import 'package:shopping_list/auth/sign_in.dart';
 import 'package:shopping_list/pages/category/category_page.dart';
 import 'package:shopping_list/pages/login.dart';
 import 'package:shopping_list/pages/product/add_product_page.dart';
@@ -12,9 +12,7 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
-  final FocusNode _nameFocusNode = FocusNode();
-  final FocusNode _emailFocusNode = FocusNode();
-  final FocusNode _passwordFocusNode = FocusNode();
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +53,15 @@ class _ProductPageState extends State<ProductPage> {
             decoration: BoxDecoration(
               color: Colors.teal[300],
             ),
-            accountName: Text(name),
-            accountEmail: Text(email),
+            accountName:Text(
+              "Selamat Datang",
+              style: TextStyle(
+                  fontSize: 16, fontWeight: FontWeight.bold, letterSpacing: 3),
+            ),
+            accountEmail: Text(
+              auth.currentUser.email,
+              style: TextStyle(fontSize: 15),
+            ),
             currentAccountPicture: CircleAvatar(
               child: Icon(
                 Icons.account_circle,
@@ -85,6 +90,11 @@ class _ProductPageState extends State<ProductPage> {
                 MaterialPageRoute(builder: (context) => CategoryPage()),
               );
             },
+          ),
+          Expanded(
+            child: Divider(
+              thickness: 3,
+            ),
           ),
           Divider(height: 10),
           ListTile(
