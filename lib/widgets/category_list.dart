@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:shopping_list/database/category.dart';
 import 'package:shopping_list/pages/category/edit_category_page.dart';
 
@@ -20,33 +21,47 @@ class CategoryList extends StatelessWidget {
               String docID = snapshot.data.docs[index].id;
               String categoryName = noteInfo['categoryName'];
 
-              return Card(
-                color: Colors.grey[50],
-                elevation: 2.0,
-                margin: EdgeInsets.all(8),
-                child: ListTile(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+              return Slidable(
+                actionPane: SlidableDrawerActionPane(),
+                actionExtentRatio: 0.25,
+                child: Card(
+                  color: Colors.grey[50],
+                  elevation: 2.0,
+                  margin: EdgeInsets.all(8),
+                  child: ListTile(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    leading: CircleAvatar(
+                      child: Icon(Icons.category),
+                    ),
+                    title: Text(
+                      categoryName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => EditCategoryPage(
-                        currentCategoryName: categoryName,
-                        documentId: docID,
+                ),
+                secondaryActions: <Widget>[
+                  IconSlideAction(
+                    icon: (Icons.edit),
+                    color: Colors.indigo[100],
+                    caption: 'Edit',
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => EditCategoryPage(
+                          currentCategoryName: categoryName,
+                          documentId: docID,
+                        ),
                       ),
                     ),
                   ),
-                  leading: CircleAvatar(
-                    child: Icon(Icons.category),
-                  ),
-                  title: Text(
-                    categoryName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
-                  ),
-                  trailing: GestureDetector(
-                    child: Icon(Icons.delete),
+                  IconSlideAction(
+                    icon: (Icons.delete),
+                    color: Colors.pink[100],
+                    caption: 'Delete',
                     onTap: () {
                       showDialog(
                         context: context,
@@ -71,7 +86,7 @@ class CategoryList extends StatelessWidget {
                       );
                     },
                   ),
-                ),
+                ],
               );
             },
           );

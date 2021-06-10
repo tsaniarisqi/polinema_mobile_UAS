@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:shopping_list/database/product.dart';
 import 'package:shopping_list/pages/product/edit_product_page.dart';
 
@@ -23,67 +24,89 @@ class ProductList extends StatelessWidget {
               int qty = noteInfo['qty'];
               String notes = noteInfo['notes'];
 
-              return Card(
-                color: Colors.grey[50],
-                elevation: 5.0,
-                margin: EdgeInsets.all(8),
-                child: ListTile(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+              return Slidable(
+                actionPane: SlidableDrawerActionPane(),
+                actionExtentRatio: 0.25,
+                child: Card(
+                  color: Colors.grey[50],
+                  elevation: 5.0,
+                  margin: EdgeInsets.all(8),
+                  child: ListTile(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    leading: CircleAvatar(
+                      child: Icon(Icons.shopping_basket),
+                    ),
+                    title: Row(
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.only(right: 10, top: 5),
+                          child: Text(
+                            categoryName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: Colors.teal[600]),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 5),
+                          child: Text(
+                            productName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
+                        ),
+                      ],
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 5),
+                          child: Text(
+                            "Qty: $qty",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 5, bottom: 5),
+                          child: Text(
+                            "Notes: $notes",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w700),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => EditProductPage(
-                        currentProductName: productName,
-                        currentQty: qty.toString(),
-                        currentNotes: notes,
-                        documentId: docID,
+                ),
+                secondaryActions: <Widget>[
+                  IconSlideAction(
+                    icon: (Icons.edit),
+                    color: Colors.indigo[100],
+                    caption: 'Edit',
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => EditProductPage(
+                          currentProductName: productName,
+                          currentQty: qty.toString(),
+                          currentNotes: notes,
+                          documentId: docID,
+                        ),
                       ),
                     ),
                   ),
-                  leading: CircleAvatar(
-                    child: Icon(Icons.shopping_basket),
-                  ),
-                  title: Row(
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.only(right: 10),
-                        child: Text(
-                          categoryName,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: Colors.teal[600]),
-                        ),
-                      ),
-                      Text(
-                        productName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      ),
-                    ],
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "Qty: $qty",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w700),
-                      ),
-                      Text(
-                        "Notes: $notes",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w700),
-                      ),
-                    ],
-                  ),
-                  trailing: GestureDetector(
-                    child: Icon(Icons.delete),
+                  IconSlideAction(
+                    icon: (Icons.delete),
+                    color: Colors.pink[100],
+                    caption: 'Delete',
                     onTap: () {
                       showDialog(
                         context: context,
@@ -108,7 +131,7 @@ class ProductList extends StatelessWidget {
                       );
                     },
                   ),
-                ),
+                ],
               );
             },
           );
