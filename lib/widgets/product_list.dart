@@ -39,29 +39,34 @@ class ProductList extends StatelessWidget {
                       child: Icon(Icons.shopping_basket),
                     ),
                     title: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.only(right: 10, top: 5),
-                          child: Text(
-                            categoryName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: Colors.teal[600]),
+                        Flexible(
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 15, top: 5),
+                            child: Text(
+                              categoryName,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: Colors.teal[600]),
+                            ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 5),
-                          child: Text(
-                            productName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18),
+                        Flexible(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 5),
+                            child: Text(
+                              productName,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
+                            ),
                           ),
-                        ),
+                        )
                       ],
                     ),
                     subtitle: Column(
@@ -71,6 +76,8 @@ class ProductList extends StatelessWidget {
                           padding: EdgeInsets.only(top: 5),
                           child: Text(
                             "Qty: $qty",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w700),
                           ),
@@ -79,6 +86,8 @@ class ProductList extends StatelessWidget {
                           padding: EdgeInsets.only(top: 5, bottom: 5),
                           child: Text(
                             "Notes: $notes",
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w700),
                           ),

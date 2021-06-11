@@ -65,7 +65,7 @@ class _ProductPageState extends State<ProductPage> {
             currentAccountPicture: CircleAvatar(
               child: Icon(
                 Icons.account_circle,
-                size: 70,
+                size: 70, 
               ),
             ),
           ),
@@ -91,12 +91,7 @@ class _ProductPageState extends State<ProductPage> {
               );
             },
           ),
-          Expanded(
-            child: Divider(
-              thickness: 3,
-            ),
-          ),
-          Divider(height: 10),
+          Divider(thickness: 3),
           ListTile(
             leading: Icon(Icons.login_outlined),
             title: Text("Log Out"),

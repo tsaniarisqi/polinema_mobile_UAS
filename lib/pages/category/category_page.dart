@@ -91,11 +91,7 @@ class _CategoryPageState extends State<CategoryPage> {
               );
             },
           ),
-          Expanded(
-            child: Divider(
-              thickness: 3,
-            ),
-          ),
+          Divider(thickness: 3),
           ListTile(
             leading: Icon(Icons.login_outlined),
             title: Text("Log Out"),

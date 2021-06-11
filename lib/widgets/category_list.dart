@@ -26,7 +26,7 @@ class CategoryList extends StatelessWidget {
                 actionExtentRatio: 0.25,
                 child: Card(
                   color: Colors.grey[50],
-                  elevation: 2.0,
+                  elevation: 5.0,
                   margin: EdgeInsets.all(8),
                   child: ListTile(
                     shape: RoundedRectangleBorder(
