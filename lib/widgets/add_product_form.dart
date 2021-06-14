@@ -156,12 +156,30 @@ class _AddProductFormState extends State<AddProductForm> {
                       color: Colors.white, fontSize: 18, letterSpacing: 3),
                 ),
                 onPressed: () async {
-                  await Product.addProduct(
-                      categoryName: selectedCategory,
-                      productName: _productNameController.text,
-                      qty: int.tryParse(_qtyController.text),
-                      notes: _notesController.text);
-                  Navigator.of(context).pop();
+                  if (selectedCategory != null) {
+                    await Product.addProduct(
+                        categoryName: selectedCategory,
+                        productName: _productNameController.text,
+                        qty: int.tryParse(_qtyController.text),
+                        notes: _notesController.text);
+                    Navigator.of(context).pop();
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text("Message"),
+                        content: Text("Please choose a category"),
+                        actions: <Widget>[
+                          FlatButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text("OK"),
+                          )
+                        ],
+                      ),
+                    );
+                  }
                 },
               ),
             ),
